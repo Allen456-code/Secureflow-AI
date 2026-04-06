@@ -1,25 +1,40 @@
-import { runSandbox } from "./sandbox.js";
+import { runSandbox, openSafeMode } from "./sandbox.js";
 
-export async function handleAction(decision, fileName) {
+export async function handleAction(result, fileName) {
 
-    if (decision === "ALLOW") {
-        console.log(`[Action] File allowed: ${fileName}`);
-    }
+    const { decision, risk_score } = result;
 
-    else if (decision === "WARN") {
-        console.log(`[Warning] File looks suspicious: ${fileName}`);
-    }
+    console.log(`\n[Decision Engine]`);
+    console.log(`Risk Score : ${risk_score}`);
+    console.log(`Decision   : ${decision}`);
 
-    else if (decision === "SANDBOX") {
-        console.log(`[Action] Running file in sandbox...`);
+    switch (decision) {
 
-        const result = await runSandbox(fileName);
+        case "ALLOW":
+            console.log(`[Action] File allowed: ${fileName}\n`);
+            break;
 
-        console.log(`[Sandbox Result]:`);
-        result.behavior.forEach(b => console.log(`- ${b}`));
-    }
+        case "WARN":
+            console.log(`[Warning] Suspicious file: ${fileName}\n`);
+            break;
 
-    else if (decision === "BLOCK") {
-        console.log(`[Blocked] File blocked: ${fileName}`);
+        case "SANDBOX":
+            console.log(`[Action] Running file in sandbox...\n`);
+
+            const sandboxResult = await runSandbox(fileName);
+
+            
+            if (sandboxResult.behavior.length > 1) {
+                console.log("[Escalation] Multiple suspicious behaviors detected → BLOCK\n");
+            }
+
+            break;
+
+        case "BLOCK":
+            console.log(`[Blocked] File blocked: ${fileName}\n`);
+            break;
+
+        default:
+            console.log("[Error] Unknown decision\n");
     }
 }
