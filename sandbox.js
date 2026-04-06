@@ -1,37 +1,46 @@
-import fs from "fs";
-
 export async function runSandbox(fileName) {
-    console.log(`[Sandbox] Starting analysis for ${fileName}...`);
+    console.log(`\n[Sandbox] Starting analysis for ${fileName}...`);
 
-    // Simulated behavior (this is your "magic")
     const behaviors = [
         "Attempted outbound network connection",
         "Tried to modify system registry",
-        "Created hidden background process"
+        "Created hidden background process",
+        "Accessed sensitive file paths",
+        "Spawned unknown subprocess"
     ];
 
-    // Randomize behavior (makes demo dynamic)
-    const selected = behaviors.sort(() => 0.5 - Math.random()).slice(0, 2);
+    // Pick 2 random behaviors
+    const selected = behaviors
+        .sort(() => 0.5 - Math.random())
+        .slice(0, 2);
 
-    const result = {
+    console.log("[Sandbox] Observed behaviors:");
+
+    selected.forEach((b) => {
+        console.log(`  - ${b}`);
+    });
+
+    console.log("[Sandbox] Analysis complete\n");
+
+    return {
         file: fileName,
         behavior: selected,
         verdict: "Suspicious"
     };
-
-    console.log(`[Sandbox] Analysis complete`);
-
-    return result;
 }
+
+
+// SAFE MODE (VERY IMPORTANT FEATURE)
 export async function openSafeMode(fileName) {
-    console.log(`[Safe Mode] Opening ${fileName} in isolated environment...`);
+    console.log(`\n[Safe Mode] Opening ${fileName} in isolated environment...`);
 
     console.log(`
-  ----------------------------
-  FILE VIEW (ISOLATED)
-  ----------------------------
-  Access restricted
-  External connections blocked
-  ----------------------------
-  `);
+----------------------------
+ FILE VIEW (ISOLATED MODE)
+----------------------------
+ Access restricted
+ Network disabled
+ File system locked
+----------------------------
+`);
 }
