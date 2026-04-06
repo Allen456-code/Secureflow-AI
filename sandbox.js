@@ -9,7 +9,7 @@ export async function runSandbox(fileName) {
         "Spawned unknown subprocess"
     ];
 
-    // Pick 2 random behaviors
+    
     const selected = behaviors
         .sort(() => 0.5 - Math.random())
         .slice(0, 2);
@@ -30,7 +30,7 @@ export async function runSandbox(fileName) {
 }
 
 
-// SAFE MODE (VERY IMPORTANT FEATURE)
+
 export async function openSafeMode(fileName) {
     console.log(`\n[Safe Mode] Opening ${fileName} in isolated environment...`);
 
